@@ -3,32 +3,30 @@ import 'package:testapp/model/model_movie.dart';
 
 class CarouselImage extends StatefulWidget {
   final List<Movie> movies;
-  CarouselImage({this.movies});
+  const CarouselImage({super.key, required this.movies});
+  @override
   _CarouselImageState createState() => _CarouselImageState();
-  
 }
 
- class _CarouselImageState extends State<CarouselImage> {
+class _CarouselImageState extends State<CarouselImage> {
+  late List<Movie> movies;
+  late List<Widget> images;
+  late List<String> keywords;
+  late List<bool> likes;
 
-  List<Movie> movies;
-  List<Widget> images;
-  List<String> keywords;
-  List<bool> likes;
-
-  int _currentPage = 0;
-  String _currentKeyword;
+  final int _currentPage = 0;
+  late String _currentKeyword;
 
   @override
   void initState() {
     super.initState();
     movies = widget.movies;
-    images = movies.map((m) => Image.asset('./images/' + m.poster)).toList();
+    images = movies.map((m) => Image.asset('./images/${m.poster}')).toList();
     keywords = movies.map((m) => m.keyword).toList();
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Container();
   }
- }
+}

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:testapp/screen/home_screen.dart';
 import 'package:testapp/widget/bottom_bar.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
   _MyAppState createState() => _MyAppState();
 }
 
@@ -17,7 +20,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Colors.black,
-        colorScheme: ColorScheme.dark(
+        colorScheme: const ColorScheme.dark(
           primary: Colors.white,
           secondary: Colors.redAccent,
         ),
@@ -26,12 +29,24 @@ class _MyAppState extends State<MyApp> {
         length: 4,
         child: Scaffold(
           body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: <Widget>[
               HomeScreen(),
-              Container(child: Center(child: Text('search'),),),
-              Container(child: Center(child: Text('save'),),),
-              Container(child: Center(child: Text('more'),),),
+              Container(
+                child: const Center(
+                  child: Text('search'),
+                ),
+              ),
+              Container(
+                child: const Center(
+                  child: Text('save'),
+                ),
+              ),
+              Container(
+                child: const Center(
+                  child: Text('more'),
+                ),
+              ),
             ],
           ),
           bottomNavigationBar: Bottom(),
