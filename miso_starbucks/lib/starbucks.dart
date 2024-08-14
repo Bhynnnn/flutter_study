@@ -21,7 +21,7 @@ class _StarbucksState extends State<Starbucks> {
     return Scaffold(
       body: IndexedStack(
         index: currentIndex, // index 순서에 해당하는 child를 맨 위에 보여줌
-        children: const [
+        children: [
           StarbucksFirstPage(),
           StarbucksSecondPage(),
           StarbucksThirdPage(),
@@ -97,10 +97,212 @@ class StarbucksFirstPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Text("Starbucks 첫 번째 페이지"),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                expandedHeight: 250,
+                automaticallyImplyLeading: false,
+                // 스크롤시 사라지는 영역
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    children: [
+                      Image.network(backImg),
+                      Positioned(
+                        bottom: 60,
+                        left: 20,
+                        right: 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '한 해의 마무리,\n수고 많았어💖',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '11 ★ until next Reward',
+                                        style: TextStyle(
+                                          color: starbucksAccentColor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      LinearProgressIndicator(
+                                        value: 0.083,
+                                        color: starbucksAccentColor,
+                                        minHeight: 10,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 28,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: '1 ',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 38,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '/ 12',
+                                        style: TextStyle(
+                                            color: starbucksAccentColor),
+                                      ),
+                                      TextSpan(
+                                        text: '★',
+                                        style: TextStyle(
+                                            color: starbucksAccentColor),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // 스크롤 시 남아있는 영역
+
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(52),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Container(
+                      height: 52,
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.mail_outline,
+                                ),
+                                Text("What's New"),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.confirmation_num_outlined,
+                                ),
+                                Text("Coupon"),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Stack(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.notifications_outlined),
+                                iconSize: 32,
+                              ),
+                              Positioned(
+                                right: 10,
+                                top: 10,
+                                child: CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: starbucksPrimaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
+                        child: Image.network(frequencyImg),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: '비흔',
+                              style: TextStyle(
+                                color: starbucksAccentColor,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '님을 위한 추천 메뉴',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
