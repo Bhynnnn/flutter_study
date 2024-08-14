@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Miso 메인 색상
@@ -260,7 +261,89 @@ class MisoThirdPage extends StatelessWidget {
                     SizedBox(
                       height: 64,
                     ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 28,
+                          height: 1.5,
+                          color: Colors.white,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '친구 추천할 때마다\n',
+                          ),
+                          TextSpan(
+                            text: '10,000원 ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '할인쿠폰 지급!',
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 64,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        print("자세히 보기 클릭 됨");
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '자세히 보기',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
+                ),
+                Positioned(
+                  bottom: 30,
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 40),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            CupertinoIcons.gift_fill,
+                            color: misoPrimaryColor,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            '친구 추천하기',
+                            style: TextStyle(
+                              color: misoPrimaryColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -277,9 +360,93 @@ class MisoFourthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("Miso 네 번째 페이지"),
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            vertical: 70,
+            horizontal: 16,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '나의 정보',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                '010-1234-5678',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              ListTile(
+                onTap: () {},
+                contentPadding: EdgeInsets.all(0),
+                horizontalTitleGap: 30,
+                leading: Icon(Icons.home_outlined, color: Colors.black),
+                title: Text(
+                  "주소 관리",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {},
+                contentPadding: EdgeInsets.all(0),
+                horizontalTitleGap: 30,
+                leading: Icon(Icons.credit_card, color: Colors.black),
+                title: Text(
+                  "결제 수단 관리",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {},
+                contentPadding: EdgeInsets.all(0),
+                horizontalTitleGap: 30,
+                leading: Icon(CupertinoIcons.speaker_3, color: Colors.black),
+                title: Text(
+                  "공지사항",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              ListTile(
+                onTap: () {},
+                contentPadding: EdgeInsets.all(0),
+                horizontalTitleGap: 30,
+                leading:
+                    Icon(CupertinoIcons.question_circle, color: Colors.black),
+                title: Text(
+                  "문의사항",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
