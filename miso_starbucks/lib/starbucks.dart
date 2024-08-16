@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 여기에 SystemChrome이 있음
 
 /// Starbucks 메인 색상
 Color starbucksPrimaryColor = const Color.fromARGB(255, 83, 184, 138);
@@ -101,89 +103,116 @@ class StarbucksFirstPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          /// Tip : Sliver 위젯들을 이용하려면 CustomScrollView를 사용해야 합니다.
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                pinned: true,
-                expandedHeight: 250,
-                automaticallyImplyLeading: false,
-                // 스크롤시 사라지는 영역
+                automaticallyImplyLeading: false, // 뒤로가기 버튼 숨기기
+                pinned: true, // 스크롤시 bottom 영역을 화면 상단에 남길지 여부
+                snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 배경을 모두 보여줄지
+                floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을지
+                expandedHeight: 250, // 최대 확장되었을 떄 높이
+                backgroundColor: Colors.white,
+                scrolledUnderElevation: 0,
+
+                /// 스크롤시 사라지는 영역
                 flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
                   background: Stack(
                     children: [
-                      Image.network(backImg),
-                      Positioned(
+                      /// 백그라운드 이미지
+                      Positioned.fill(
                         bottom: 60,
-                        left: 20,
-                        right: 20,
+                        child: Image.network(
+                          backImg,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+
+                      /// 배경 위 위젯
+                      Positioned(
+                        left: 24,
+                        right: 24,
+                        bottom: 60,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '한 해의 마무리,\n수고 많았어💖',
+                              "한 해의 마무리,\n수고 많았어요💖",
                               style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
                                 fontSize: 28,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
-                              height: 30,
-                            ),
+                            SizedBox(height: 32),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
+                                /// Tip: LinearProgressIndicator가 끝없이 길어지지 않도록 Column의 가로 길이를 Row의 남은 자리만큼만 차지하도록 만들어줌
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '11 ★ until next Reward',
+                                        "11 ★ until next Reward",
                                         style: TextStyle(
                                           color: starbucksAccentColor,
-                                          fontSize: 15,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      LinearProgressIndicator(
-                                        value: 0.083,
-                                        color: starbucksAccentColor,
-                                        minHeight: 10,
-                                        borderRadius: BorderRadius.circular(10),
+                                      SizedBox(height: 16),
+
+                                      /// Tip : LinearProgressIndicator는 각져있는데, 둥글게 보이도록 모서리를 잘라냄
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        child: LinearProgressIndicator(
+                                          backgroundColor:
+                                              Colors.grey.withOpacity(0.2),
+                                          value: 0.083,
+                                          minHeight: 10,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            starbucksAccentColor,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 16,
-                                ),
+                                SizedBox(width: 16),
                                 RichText(
                                   textAlign: TextAlign.center,
                                   text: TextSpan(
+                                    // 공통 스타일
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
                                       fontSize: 28,
+                                      color: Colors
+                                          .black, // RichText는 기본이 흰색이라 안보임
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: '1 ',
+                                        text: "1",
                                         style: TextStyle(
-                                          color: Colors.black,
                                           fontSize: 38,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       TextSpan(
-                                        text: '/ 12',
+                                        text: " / ",
                                         style: TextStyle(
-                                            color: starbucksAccentColor),
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                       TextSpan(
-                                        text: '★',
+                                        text: "12 ★",
                                         style: TextStyle(
-                                            color: starbucksAccentColor),
+                                          color: starbucksAccentColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -196,15 +225,19 @@ class StarbucksFirstPage extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 // 스크롤 시 남아있는 영역
 
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(52),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Container(
-                      height: 52,
-                      color: Colors.white,
+                  child: Container(
+                    height: 52,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 24,
+                        right: 12,
+                      ),
                       child: Row(
                         children: [
                           GestureDetector(
@@ -297,10 +330,84 @@ class StarbucksFirstPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 150,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 100,
+                        itemBuilder: (context, index) {
+                          final menu =
+                              recommendMenu[index % recommendMenu.length];
+                          final name = menu["name"] ?? "이름";
+                          final imgUrl = menu["imgUrl"] ?? "";
+
+                          return SizedBox(
+                            width: 128,
+                            child: Column(
+                              children: [
+                                CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: NetworkImage(imgUrl),
+                                  backgroundColor: Colors.transparent,
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  name,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
+                        child: Image.network(eventImg),
+                      ),
+                    ),
                   ],
                 ),
               )
             ],
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                decoration: BoxDecoration(
+                  color: starbucksPrimaryColor,
+                  borderRadius: BorderRadius.circular(60),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'Deliverys',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Icon(
+                      Icons.pedal_bike_outlined,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
