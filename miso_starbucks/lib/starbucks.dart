@@ -424,9 +424,94 @@ class StarbucksSecondPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("Starbucks 두 번째 페이지"),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        shadowColor: Colors.white,
+        backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
+        elevation: 5,
+        title: Text(
+          "Pay",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.list_rounded,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: PageController(
+                viewportFraction: 0.85,
+              ),
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: Offset(0, 4),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  margin: EdgeInsets.all(10),
+                  child: Image.network(cardImgUrl),
+                );
+              },
+            ),
+          ),
+          Container(
+            height: 80,
+            color: Colors.white,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "Coupon",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(
+                  height: 12,
+                  width: 1,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: Text(
+                    "e-Gift Item",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -462,9 +547,93 @@ class StarbucksThirdPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("Starbucks 세 번째 페이지"),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text(
+            "Order",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.search),
+              color: Colors.grey,
+            ),
+          ],
+          bottom: TabBar(
+            tabs: [
+              Tab(text: "전체 메뉴"),
+              Tab(text: "나만의 메뉴"),
+              Tab(text: "🎂 홀케이크"),
+            ],
+            indicatorColor: starbucksPrimaryColor,
+            isScrollable: false,
+            indicatorWeight: 4,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            ListView.builder(
+              itemCount: 100,
+              itemBuilder: (context, index) {
+                final item = menu[index % menu.length];
+                final ko = item["ko"] ?? "제목";
+                final en = item["en"] ?? "title";
+                final imgUrl = item["imgUrl"] ?? "";
+
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 52,
+                        backgroundImage: NetworkImage(imgUrl),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            ko,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                          Text(
+                            en,
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+            Center(
+              child: Text("나만의 메뉴"),
+            ),
+            Center(
+              child: Text("나만의 메뉴"),
+            ),
+          ],
+        ),
       ),
     );
   }
