@@ -13,5 +13,18 @@ class BucketService extends ChangeNotifier {
 
   void createBucket(String job) {
     bucketList.add(Bucket(job, false));
+    // 갱신 = Consumer<BucketService>의 builder 부분만 새로고침
+    // builder: (context, bucketService, child) 호출
+    notifyListeners();
+  }
+
+  void updateBucket(Bucket bucket, int index) {
+    bucketList[index] = bucket;
+    notifyListeners();
+  }
+
+  void deleteBucket(int index) {
+    bucketList.remove(index);
+    notifyListeners();
   }
 }
