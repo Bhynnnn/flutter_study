@@ -37,8 +37,8 @@ class DiaryService extends ChangeNotifier {
   DiaryService(this.prefs) {
     // 생성자가 호출될 때 SharedPreferences로 저장해 둔 diaryList를 불러옵니다.
     // 저장할 때와 반대로 String -> Map -> Diary로 변환합니다.
-    List<String> strintDiaryList = prefs.getStringList("diaryList") ?? [];
-    for (String stringDiary in strintDiaryList) {
+    List<String> stringDiaryList = prefs.getStringList("diaryList") ?? [];
+    for (String stringDiary in stringDiaryList) {
       // String -> Map
       Map<String, dynamic> jsonMap = jsonDecode(stringDiary);
 
