@@ -1,6 +1,6 @@
-import 'dart:ffi';
-
 import 'package:bucket_list_with_firebase/auth_service.dart';
+import 'package:bucket_list_with_firebase/bucket_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => BucketService()),
       ],
       child: const MyApp(),
     ),
@@ -166,83 +167,104 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  TextEditingController jobController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController jobController = TextEditingController();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
-        title: Text(
-          "버킷 리스트",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: false,
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.read<AuthService>().signOut();
-              print("sign out");
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            },
-            child: Text(
-              "로그아웃",
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser()!;
+    return Consumer<BucketService>(
+      builder: (context, bucketService, child) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color.fromRGBO(33, 150, 243, 1),
+            title: Text(
+              "버킷 리스트",
               style: TextStyle(color: Colors.white),
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: jobController,
-                    decoration: InputDecoration(hintText: "하고싶은 일을 입력해주세요"),
-                  ),
+            centerTitle: false,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.read<AuthService>().signOut();
+                  print("sign out");
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                },
+                child: Text(
+                  "로그아웃",
+                  style: TextStyle(color: Colors.white),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (jobController.text.isNotEmpty) {
-                      print('create bucket');
-                    }
-                  },
-                  child: Icon(Icons.add),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
-          Divider(height: 1),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                String job = "$index";
-                bool isDone = false;
-                return ListTile(
-                  title: Text(
-                    job,
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: isDone ? Colors.blue : Colors.black,
-                      decoration: isDone
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: jobController,
+                        decoration: InputDecoration(hintText: "하고싶은 일을 입력해주세요"),
+                      ),
                     ),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(CupertinoIcons.delete),
-                    onPressed: () {},
-                  ),
-                  onTap: () {},
-                );
-              },
-            ),
-          )
-        ],
-      ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (jobController.text.isNotEmpty) {
+                          bucketService.create(jobController.text, user.uid);
+                          print('create bucket');
+                        }
+                      },
+                      child: Icon(Icons.add),
+                    )
+                  ],
+                ),
+              ),
+              Divider(height: 1),
+              Expanded(
+                child: FutureBuilder<QuerySnapshot>(
+                    future: bucketService.read(user.uid),
+                    builder: (context, snapshot) {
+                      final documents = snapshot.data?.docs ?? [];
+                      if (documents.isEmpty) {
+                        return Center(child: Text("버킷 리스트를 작성해주세요."));
+                      }
+                      return ListView.builder(
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          final doc = documents[index];
+                          String job = doc.get('job');
+                          bool isDone = doc.get('isDone');
+                          return ListTile(
+                            title: Text(
+                              job,
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: isDone ? Colors.blue : Colors.black,
+                                decoration: isDone
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(CupertinoIcons.delete),
+                              onPressed: () {
+                                bucketService.delete(doc.id);
+                              },
+                            ),
+                            onTap: () {
+                              bucketService.update(doc.id, !isDone);
+                            },
+                          );
+                        },
+                      );
+                    }),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
