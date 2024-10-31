@@ -23,9 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final dio = Dio();
-    const simulatorIp = '127.0.0.1:3000';
-    const emulatorIp = '10.0.2.2:3000';
-    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
+
     return DefaultLayout(
       child: SingleChildScrollView(
         // 키보드 올라왔다가 내리면 자동으로 화면도 같이 내려감
@@ -112,20 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text('로그인'),
                 ),
                 TextButton(
-                  // Token refresh 버튼
-                  onPressed: () async {
-                    const refreshToken =
-                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcyOTc1MTUxMCwiZXhwIjoxNzI5ODM3OTEwfQ.ydUBgqOiUJleXKXA3Ff-_HUr1F9eotJw4Vek9gIEujw';
-                    final resp = await dio.post(
-                      'http://$ip/auth/token',
-                      options: Options(headers: {
-                        'authorization': 'Bearer $refreshToken',
-                      }),
-                    );
-
-                    //토큰 두개 찍힘
-                    print(resp.data);
-                  },
+                  onPressed: () async {},
                   style: TextButton.styleFrom(foregroundColor: Colors.black),
                   child: Text('회원가입'),
                 ),

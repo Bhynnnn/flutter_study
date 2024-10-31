@@ -1,5 +1,6 @@
 import 'package:actual/common/const/colors.dart';
 import 'package:actual/common/layout/default_layout.dart';
+import 'package:actual/restaurant/view/restaurant_screen.dart';
 import 'package:flutter/material.dart';
 
 class RootTab extends StatefulWidget {
@@ -17,7 +18,21 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     controller = TabController(length: 4, vsync: this);
+
+    controller.addListener(tabListener);
     // vsync - with SingleTickerProviderStateMixin 설정 해줘야한대요...
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(tabListener);
+    super.dispose();
+  }
+
+  void tabListener() {
+    setState(() {
+      index = controller.index;
+    });
   }
 
   @override
@@ -31,6 +46,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         unselectedFontSize: 10,
         type: BottomNavigationBarType.shifting,
         onTap: (int index) {
+          controller.animateTo(index);
           print(index);
           setState(() {
             this.index = index;
@@ -57,9 +73,11 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         ],
       ),
       child: TabBarView(
+        // 화면 swipe로 tab변경 안됨
+        physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          Center(child: Container(child: Text('홈'))),
+          RestaurantScreen(),
           Center(child: Container(child: Text('음식'))),
           Center(child: Container(child: Text('주문'))),
           Center(child: Container(child: Text('프로필'))),
