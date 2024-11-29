@@ -30,5 +30,44 @@ Future<int> gStateFuture2(GStateFuture2Ref ref) async {
   );
   return 10;
 }
+
 // 2. Parameter > Family 파라미터를 일반 함수처럼 사용할 수 있도록
 
+class Parameter {
+  final int number1;
+  final int number2;
+
+  Parameter({
+    required this.number1,
+    required this.number2,
+  });
+}
+
+final _testFamailyProvider = Provider.family<int, Parameter>(
+  (ref, Parameter) => Parameter.number1 * Parameter.number2,
+);
+
+@riverpod
+int gStateMultiply(
+  GStateMultiplyRef ref, {
+  required int number1,
+  required int number2,
+}) {
+  return number1 * number2;
+}
+
+@riverpod
+class gStateNotifier extends _$gStateNotifier {
+  @override
+  int build() {
+    return 0;
+  }
+
+  increment() {
+    state++;
+  }
+
+  decrement() {
+    state--;
+  }
+}
